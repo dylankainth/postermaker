@@ -6,7 +6,7 @@ import requests
 
 # connect to mongodb with db 'test' and collection 'lectures'
 # change the connection string to your own mongodb connection string
-client = pymongo.MongoClient('mongodb+srv://dbuser:dbpass@cluster0.9ctff.mongodb.net/?retryWrites=true&w=majority')
+client = pymongo.MongoClient('')
 db = client['test']
 
 #get the lectures collection
