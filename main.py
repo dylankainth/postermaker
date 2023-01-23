@@ -5,7 +5,7 @@ import requests
 
 
 def generate_poster(id, title, strapline, peoplestring, date, timelocation, image):
-    img = Image.open('cssposterblank.png', 'r')
+    img = Image.open('cssposterblankv2.png', 'r')
     im2 = Image.open(requests.get(
         image, stream=True).raw)
     img_w, img_h = img.size
@@ -18,8 +18,8 @@ def generate_poster(id, title, strapline, peoplestring, date, timelocation, imag
 
     # crop and resize im2 using imageops.fit to img width and height 600px with no stretching (object-fit: cover)
     from PIL import ImageOps
-    im2 = ImageOps.fit(im2, (img_w, 650), Image.ANTIALIAS)
-    back_im.paste(im2, (0, 810))
+    im2 = ImageOps.fit(im2, (img_w, 2*650), Image.ANTIALIAS)
+    back_im.paste(im2, (0, 2*810))
 
     # add text title with font Poppins in #BC8F00 at height 425px at the center with 70px font size if less than 30 characters, and 40px font size if more than 30 characters
     from PIL import ImageFont, ImageDraw
@@ -27,9 +27,9 @@ def generate_poster(id, title, strapline, peoplestring, date, timelocation, imag
 
     text = title
     if len(text) > 30:
-        font = ImageFont.truetype('Poppins-SemiBold.ttf', 40)
+        font = ImageFont.truetype('Poppins-SemiBold.ttf', 40*2)
     else:
-        font = ImageFont.truetype('Poppins-SemiBold.ttf', 70)
+        font = ImageFont.truetype('Poppins-SemiBold.ttf', 70*2)
     draw = ImageDraw.Draw(back_im)
 
     if len(textwrap.wrap(text, width=50)) == 2:
@@ -38,17 +38,17 @@ def generate_poster(id, title, strapline, peoplestring, date, timelocation, imag
         a = 0
 
     for i, line in enumerate(textwrap.wrap(text, width=50)):
-        draw.text((img_w/2, 425 + i*55 + a), line,
+        draw.text((img_w/2, (425 + i*55 + a)*2), line,
                   font=font, fill='#BC8F00', anchor='mm')
 
     # add text with font Poppins in #BC8F00 at height 540 with 55px font size at the center, allowing overspill to next line using textwrap.wrap to break text into a list of strings, each at most width characters long
     from textwrap import wrap
 
     text = strapline
-    font = ImageFont.truetype('Poppins-Regular.ttf', 40)
+    font = ImageFont.truetype('Poppins-Regular.ttf', 40*2)
     draw = ImageDraw.Draw(back_im)
     for i, line in enumerate(wrap(text, width=50)):
-        draw.text((img_w/2, 540 + i*55), line,
+        draw.text((img_w/2, (540 + i*55)*2), line,
                   font=font, fill='#BC8F00', anchor='mm')
 
     # set variable amountofpeople to the length of the peoplestring list
@@ -59,16 +59,16 @@ def generate_poster(id, title, strapline, peoplestring, date, timelocation, imag
 
     if amountofpeople == 1:
         # add text with font Poppins in #BC8F00 at height 750 with 55px font size at the center.
-        font = ImageFont.truetype('Poppins-SemiBold.ttf', 55)
+        font = ImageFont.truetype('Poppins-SemiBold.ttf', 55*2)
         draw = ImageDraw.Draw(back_im)
-        draw.text((img_w/2, 750), peoplestring,
+        draw.text((img_w/2, 750*2), peoplestring,
                   font=font, fill='#BC8F00', anchor='mm')
 
     elif amountofpeople > 1:
         # add text with font Poppins in #BC8F00 at height 750 with 55px font size at the center.
-        font = ImageFont.truetype('Poppins-SemiBold.ttf', 40)
+        font = ImageFont.truetype('Poppins-SemiBold.ttf', 40*2)
         draw = ImageDraw.Draw(back_im)
-        draw.text((img_w/2, 750), peoplestring,
+        draw.text((img_w/2, 750*2), peoplestring,
                   font=font, fill='#BC8F00', anchor='mm')
 
     # convert date and time to a date string using datetime, append time in 12 hr format to timeloaction string
@@ -79,14 +79,14 @@ def generate_poster(id, title, strapline, peoplestring, date, timelocation, imag
 
 
     # add text with font Poppins in #BC8F00 at height 1550 with 55px font size at the center.
-    font = ImageFont.truetype('Poppins-SemiBold.ttf', 55)
+    font = ImageFont.truetype('Poppins-SemiBold.ttf', 55*2)
     draw = ImageDraw.Draw(back_im)
-    draw.text((img_w/2, 1550), date2, font=font, fill='#BC8F00', anchor='mm')
+    draw.text((img_w/2, 1550*2), date2, font=font, fill='#BC8F00', anchor='mm')
 
     # add text with font Poppins in #BC8F00 at height 1550+75 with 55px font size at the center.
-    font = ImageFont.truetype('Poppins-SemiBold.ttf', 55)
+    font = ImageFont.truetype('Poppins-SemiBold.ttf', 55*2)
     draw = ImageDraw.Draw(back_im)
-    draw.text((img_w/2, 1550+75), timelocation,
+    draw.text((img_w/2, 2*(1550+75)), timelocation,
               font=font, fill='#BC8F00', anchor='mm')
 
     # generate a qr code using qrcode for the url "https://css.harrowschool.io/lectures/" + id, save it as id.png in the posters folder
@@ -106,8 +106,8 @@ def generate_poster(id, title, strapline, peoplestring, date, timelocation, imag
 
     # add the qr code the poster but resized to 150x150 and located at the bottom right of the im2 image pasted earlier
     qr_im = Image.open('qrs/'+id+'.png')
-    qr_im = qr_im.resize((150, 150))
-    back_im.paste(qr_im, (img_w-150, img_h-150-294))
+    qr_im = qr_im.resize((150*2, 150*2))
+    back_im.paste(qr_im, ((img_w-300), (img_h-300-588)))
 
     back_im.save("posters/png/"+id+'.png')
 
